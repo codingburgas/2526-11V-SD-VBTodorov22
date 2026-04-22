@@ -1,0 +1,101 @@
+@model StatisticsDto
+@{
+    ViewData["Title"] = "Statistics";
+}
+
+<div class="mb-4">
+    <h1 class="h2 mb-1">Statistics</h1>
+    <p class="text-muted mb-0">Top-rated movies, genre distribution, and the most-reviewed titles.</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Top 5 Highest-Rated Movies</h2>
+                @if (Model.TopRatedMovies.Any())
+                {
+                    <ol class="list-group list-group-numbered">
+                        @foreach (var movie in Model.TopRatedMovies)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-semibold">@movie.Title</div>
+                                    <span class="small text-muted">@movie.ReviewCount review(s)</span>
+                                </div>
+                                <span class="badge text-bg-primary rounded-pill">@movie.AverageRating.ToString("0.0")</span>
+                            </li>
+                        }
+                    </ol>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No ratings available.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Movies Per Genre</h2>
+                @if (Model.MoviesPerGenre.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Genre</th>
+                                    <th class="text-end">Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var genre in Model.MoviesPerGenre)
+                            {
+                                <tr>
+                                    <td>@genre.Genre.GetDisplayName()</td>
+                                    <td class="text-end">@genre.Count</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No genre data available.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Most Popular Movies</h2>
+                @if (Model.MostPopularMovies.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var movie in Model.MostPopularMovies)
+                        {
+                            <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="list-group-item list-group-item-action px-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="fw-semibold">@movie.Title</div>
+                                        <div class="small text-muted">@movie.ReviewCount review(s)</div>
+                                    </div>
+                                    <span class="badge text-bg-secondary rounded-pill">@movie.AverageRating.ToString("0.0")</span>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No popularity data available.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

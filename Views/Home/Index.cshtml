@@ -1,0 +1,106 @@
+@model HomePageDto
+@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="hero-panel p-4 p-lg-5 mb-4">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+            <span class="badge text-bg-light mb-3">Academic ASP.NET Core MVC Project</span>
+            <h1 class="display-6 fw-semibold mb-3">Movie &amp; Series Database</h1>
+            <p class="lead text-secondary mb-4">
+                Explore catalog items, manage cast and crew, add user reviews with ratings, and analyze catalog statistics from a single MVC application.
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+                <a asp-controller="Movies" asp-action="Index" class="btn btn-primary">Browse Catalog</a>
+                <a asp-controller="Statistics" asp-action="Index" class="btn btn-outline-primary">View Statistics</a>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5">Seeded Accounts</h2>
+                    <p class="small text-muted mb-3">Use these accounts immediately after startup.</p>
+                    <div class="mb-3">
+                        <div class="fw-semibold">Admin</div>
+                        <div><code>admin@movieseriescatalog.local</code></div>
+                        <div><code>Admin123!</code></div>
+                    </div>
+                    <div>
+                        <div class="fw-semibold">User</div>
+                        <div><code>user@movieseriescatalog.local</code></div>
+                        <div><code>User123!</code></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h4 mb-0">Featured Catalog Items</h2>
+                    <a asp-controller="Movies" asp-action="Index" class="small text-decoration-none">See all</a>
+                </div>
+
+                @if (Model.FeaturedTitles.Any())
+                {
+                    <div class="vstack gap-3">
+                        @foreach (var movie in Model.FeaturedTitles)
+                        {
+                            <div class="border rounded-3 p-3">
+                                <div class="d-flex justify-content-between gap-3 flex-wrap">
+                                    <div>
+                                        <h3 class="h5 mb-1">@movie.Title</h3>
+                                        <div class="text-muted small">@movie.CatalogType.GetDisplayName() | @movie.Genre.GetDisplayName() | @movie.ReleaseYear</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="rating-number">@movie.AverageRating.ToString("0.0")</div>
+                                        <div class="small text-muted">@movie.ReviewCount review(s)</div>
+                                    </div>
+                                </div>
+                                <p class="mb-0 mt-3 text-secondary">@movie.Description</p>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No catalog items are available yet.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <h2 class="h4 mb-3">Top Rated Movies</h2>
+                @if (Model.TopRatedMovies.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var movie in Model.TopRatedMovies)
+                        {
+                            <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="list-group-item list-group-item-action px-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="fw-semibold">@movie.Title</div>
+                                        <div class="small text-muted">@movie.ReviewCount review(s)</div>
+                                    </div>
+                                    <span class="badge text-bg-primary rounded-pill">@movie.AverageRating.ToString("0.0")</span>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">Top rated movies will appear after reviews are added.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
