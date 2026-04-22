@@ -1,0 +1,20 @@
+@model ActorDto
+@{
+    ViewData["Title"] = "Delete Actor";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h3 text-danger mb-3">Delete Actor</h1>
+                <p>Are you sure you want to delete <strong>@Model.FullName</strong>?</p>
+                <p class="text-muted">This action will fail if the actor is still connected to catalog items.</p>
+                <form asp-action="Delete" method="post">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
