@@ -1,0 +1,52 @@
+@model IReadOnlyCollection<ActorDto>
+@{
+    ViewData["Title"] = "Actors";
+}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+        <h1 class="h2 mb-1">Actors</h1>
+        <p class="text-muted mb-0">Browse the cast members connected to the catalog.</p>
+    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-primary">Create Actor</a>
+    }
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Biography</th>
+                        <th>Catalog Items</th>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <th class="text-end">Actions</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var actor in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@actor.FullName</td>
+                        <td>@actor.Biography</td>
+                        <td>@actor.MovieCount</td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td class="text-end">
+                                <a asp-action="Edit" asp-route-id="@actor.Id" class="btn btn-outline-dark btn-sm">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@actor.Id" class="btn btn-outline-danger btn-sm">Delete</a>
+                            </td>
+                        }
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
