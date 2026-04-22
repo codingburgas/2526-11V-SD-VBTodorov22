@@ -1,0 +1,48 @@
+@model MovieReviewsPageDto
+@{
+    ViewData["Title"] = "Reviews";
+}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+        <h1 class="h2 mb-1">Reviews for @Model.MovieTitle</h1>
+        <p class="text-muted mb-0">Average rating: <strong>@Model.AverageRating.ToString("0.0") / 10</strong></p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-controller="Movies" asp-action="Details" asp-route-id="@Model.MovieId" class="btn btn-outline-secondary">Back to Details</a>
+        @if (Model.CanAddReview)
+        {
+            <a asp-action="Create" asp-route-movieId="@Model.MovieId" class="btn btn-primary">Add Review</a>
+        }
+    </div>
+</div>
+
+@if (Model.HasExistingUserReview)
+{
+    <div class="alert alert-secondary">You have already submitted a review for this catalog item.</div>
+}
+
+@if (Model.Reviews.Any())
+{
+    <div class="row g-4">
+        @foreach (var review in Model.Reviews)
+        {
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="fw-semibold">@review.UserName</div>
+                            <span class="badge text-bg-warning">@review.Rating / 10</span>
+                        </div>
+                        <div class="small text-muted mb-3">@review.CreatedAt.ToLocalTime().ToString("dd MMM yyyy HH:mm")</div>
+                        <p class="mb-0">@review.Comment</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info">No reviews are available for this movie yet.</div>
+}

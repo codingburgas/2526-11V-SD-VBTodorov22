@@ -26,11 +26,19 @@ public class ReviewsController : Controller
             return NotFound();
         }
 
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var canManageOwnReview = !string.IsNullOrWhiteSpace(userId)
+            && (User.IsInRole(RoleNames.Admin) || User.IsInRole(RoleNames.User));
+        var hasExistingUserReview = canManageOwnReview
+            && await _reviewService.HasUserReviewedAsync(movieId, userId!);
+
         var model = new MovieReviewsPageDto
         {
             MovieId = movie.Id,
             MovieTitle = movie.Title,
             AverageRating = movie.AverageRating,
+            CanAddReview = canManageOwnReview && !hasExistingUserReview,
+            HasExistingUserReview = hasExistingUserReview,
             Reviews = await _reviewService.GetByMovieIdAsync(movieId)
         };
 
