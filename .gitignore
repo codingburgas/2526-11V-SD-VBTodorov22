@@ -1,0 +1,10 @@
+.vs/
+.dotnetcli/
+bin/
+obj/
+*.user
+app.db
+run.stdout.log
+run.stderr.log
+*.db-shm
+*.db-wal
