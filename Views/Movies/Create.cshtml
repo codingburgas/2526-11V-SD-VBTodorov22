@@ -1,0 +1,67 @@
+@model MovieFormDto
+@{
+    ViewData["Title"] = "Create Movie";
+}
+
+<div class="row justify-content-center">
+    <div class="col-xl-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-3">Create Catalog Item</h1>
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="CatalogType" class="form-label"></label>
+                            <select asp-for="CatalogType" class="form-select" asp-items="Html.GetEnumSelectList<CatalogType>()"></select>
+                            <span asp-validation-for="CatalogType" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Genre" class="form-label"></label>
+                            <select asp-for="Genre" class="form-select" asp-items="Html.GetEnumSelectList<GenreType>()"></select>
+                            <span asp-validation-for="Genre" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Title" class="form-label"></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Description" class="form-label"></label>
+                            <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ReleaseYear" class="form-label"></label>
+                            <input asp-for="ReleaseYear" class="form-control" type="number" />
+                            <span asp-validation-for="ReleaseYear" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="DirectorId" class="form-label"></label>
+                            <select asp-for="DirectorId" class="form-select" asp-items="ViewBag.Directors">
+                                <option value="">Select a director</option>
+                            </select>
+                            <span asp-validation-for="DirectorId" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="ActorIds" class="form-label"></label>
+                            <select asp-for="ActorIds" class="form-select" asp-items="ViewBag.Actors" multiple size="6"></select>
+                            <div class="form-text">Hold Ctrl (Windows) or Cmd (macOS) to select multiple actors.</div>
+                            <span asp-validation-for="ActorIds" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
