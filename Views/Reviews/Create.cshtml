@@ -1,0 +1,45 @@
+@model ReviewFormDto
+@{
+    ViewData["Title"] = "Create Review";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-3">Add Review</h1>
+                <form asp-action="Create" method="post">
+                    <input asp-for="MovieId" type="hidden" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="MovieTitle" class="form-label">Movie</label>
+                        <input asp-for="MovieTitle" class="form-control" readonly />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Rating" class="form-label"></label>
+                        <select asp-for="Rating" class="form-select">
+                            @for (var rating = 1; rating <= 10; rating++)
+                            {
+                                <option value="@rating">@rating</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Rating" class="text-danger"></span>
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="Comment" class="form-label"></label>
+                        <textarea asp-for="Comment" class="form-control" rows="6"></textarea>
+                        <span asp-validation-for="Comment" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                    <a asp-action="Index" asp-route-movieId="@Model.MovieId" class="btn btn-outline-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
