@@ -13,15 +13,18 @@ public class MoviesController : Controller
     private readonly IMovieService _movieService;
     private readonly IActorService _actorService;
     private readonly IDirectorService _directorService;
+    private readonly ICoverImageStorageService _coverImageStorageService;
 
     public MoviesController(
         IMovieService movieService,
         IActorService actorService,
-        IDirectorService directorService)
+        IDirectorService directorService,
+        ICoverImageStorageService coverImageStorageService)
     {
         _movieService = movieService;
         _actorService = actorService;
         _directorService = directorService;
+        _coverImageStorageService = coverImageStorageService;
     }
 
     public async Task<IActionResult> Index(CatalogType? catalogType, GenreType? genre, int? year)
@@ -77,9 +80,9 @@ public class MoviesController : Controller
 
         try
         {
-            await _movieService.CreateAsync(dto);
-            TempData["StatusMessage"] = "Catalog item created successfully.";
-            return RedirectToAction(nameof(Index));
+            var id = await _movieService.CreateAsync(dto);
+            TempData["StatusMessage"] = "Catalog item created successfully. You can upload a cover image from the edit screen.";
+            return RedirectToAction(nameof(Edit), new { id });
         }
         catch (InvalidOperationException exception)
         {
@@ -149,12 +152,14 @@ public class MoviesController : Controller
     [Authorize(Roles = RoleNames.Admin)]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
+        var coverReference = await _movieService.GetCoverReferenceAsync(id);
         var deleted = await _movieService.DeleteAsync(id);
         if (!deleted)
         {
             return NotFound();
         }
 
+        _coverImageStorageService.Delete(coverReference?.CoverImageUrl);
         TempData["StatusMessage"] = "Catalog item deleted successfully.";
         return RedirectToAction(nameof(Index));
     }

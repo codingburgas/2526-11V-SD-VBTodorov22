@@ -28,6 +28,9 @@ public class Movie : BaseEntity
     [StringLength(2000)]
     public string Description { get; private set; } = string.Empty;
 
+    [StringLength(260)]
+    public string? CoverImagePath { get; private set; }
+
     [Range(1888, 2100)]
     public int ReleaseYear { get; private set; }
 
@@ -78,5 +81,12 @@ public class Movie : BaseEntity
         {
             MovieActors.Add(new MovieActor(actorId));
         }
+    }
+
+    public void UpdateCoverImage(string? coverImagePath)
+    {
+        CoverImagePath = string.IsNullOrWhiteSpace(coverImagePath)
+            ? null
+            : coverImagePath.Trim();
     }
 }

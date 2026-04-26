@@ -12,6 +12,8 @@ public class MovieListDto
 
     public string Description { get; init; } = string.Empty;
 
+    public string? CoverImageUrl { get; init; }
+
     public int ReleaseYear { get; init; }
 
     public GenreType Genre { get; init; }

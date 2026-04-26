@@ -60,6 +60,25 @@
     <div class="col-lg-4">
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body">
+                <h2 class="h5 mb-3">Cover</h2>
+                <div class="catalog-cover catalog-cover-lg">
+                    @if (!string.IsNullOrWhiteSpace(Model.CoverImageUrl))
+                    {
+                        <img src="@Url.Content(Model.CoverImageUrl)" alt="Cover image for @Model.Title" class="cover-image cover-image-detail" />
+                    }
+                    else
+                    {
+                        <div class="catalog-cover-placeholder">
+                            <span class="catalog-cover-placeholder-title">@Model.Title</span>
+                            <span class="catalog-cover-placeholder-subtitle">Cover image unavailable</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
                 <h2 class="h5">Cast &amp; Crew</h2>
                 <div class="mb-3">
                     <div class="text-muted small">Director</div>
@@ -95,6 +114,7 @@
                 @if (User.IsInRole("Admin"))
                 {
                     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-dark">Edit</a>
+                    <a asp-action="Edit" asp-route-id="@Model.Id" asp-fragment="cover-management" class="btn btn-outline-primary">Manage Cover</a>
                     <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">Delete</a>
                 }
             </div>

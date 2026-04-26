@@ -60,6 +60,7 @@ public class MovieService : IMovieService
                 movie.CatalogType,
                 movie.Title,
                 movie.Description,
+                movie.CoverImagePath,
                 movie.ReleaseYear,
                 movie.Genre,
                 DirectorName = movie.Director!.FullName,
@@ -75,6 +76,7 @@ public class MovieService : IMovieService
                 CatalogType = movie.CatalogType,
                 Title = movie.Title,
                 Description = movie.Description,
+                CoverImageUrl = movie.CoverImagePath,
                 ReleaseYear = movie.ReleaseYear,
                 Genre = movie.Genre,
                 DirectorName = movie.DirectorName,
@@ -114,6 +116,7 @@ public class MovieService : IMovieService
             CatalogType = movie.CatalogType,
             Title = movie.Title,
             Description = movie.Description,
+            CoverImageUrl = movie.CoverImagePath,
             ReleaseYear = movie.ReleaseYear,
             Genre = movie.Genre,
             DirectorName = movie.Director?.FullName ?? "Unknown",
@@ -145,8 +148,10 @@ public class MovieService : IMovieService
             .Where(movie => movie.Id == id)
             .Select(movie => new MovieFormDto
             {
+                Id = movie.Id,
                 Title = movie.Title,
                 Description = movie.Description,
+                CoverImageUrl = movie.CoverImagePath,
                 ReleaseYear = movie.ReleaseYear,
                 Genre = movie.Genre,
                 CatalogType = movie.CatalogType,
@@ -191,6 +196,37 @@ public class MovieService : IMovieService
 
         movie.UpdateDetails(dto.CatalogType, dto.Title, dto.Description, dto.ReleaseYear, dto.Genre, dto.DirectorId);
         movie.SetActors(dto.ActorIds);
+
+        _movieRepository.Update(movie);
+        await _movieRepository.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<MovieCoverReferenceDto?> GetCoverReferenceAsync(int id)
+    {
+        return await _movieRepository.Query()
+            .Where(movie => movie.Id == id)
+            .Select(movie => new MovieCoverReferenceDto
+            {
+                Id = movie.Id,
+                Title = movie.Title,
+                CoverImageUrl = movie.CoverImagePath
+            })
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<bool> UpdateCoverImageAsync(int id, string? coverImagePath)
+    {
+        var movie = await _movieRepository.Query(trackChanges: true)
+            .FirstOrDefaultAsync(item => item.Id == id);
+
+        if (movie is null)
+        {
+            return false;
+        }
+
+        movie.UpdateCoverImage(coverImagePath);
 
         _movieRepository.Update(movie);
         await _movieRepository.SaveChangesAsync();

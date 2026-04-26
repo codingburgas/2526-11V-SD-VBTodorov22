@@ -53,6 +53,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 .HasMaxLength(2000)
                 .IsRequired();
 
+            entity.Property(movie => movie.CoverImagePath)
+                .HasMaxLength(260);
+
             entity.HasOne(movie => movie.Director)
                 .WithMany(director => director.Movies)
                 .HasForeignKey(movie => movie.DirectorId)

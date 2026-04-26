@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using MovieSeriesCatalog.Data;
+using MovieSeriesCatalog.Middleware;
 using MovieSeriesCatalog.Models;
+using MovieSeriesCatalog.Options;
 using MovieSeriesCatalog.Services.Implementations;
 using MovieSeriesCatalog.Services.Interfaces;
 
@@ -28,6 +30,8 @@ public class Program
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlite(sqliteConnectionStringBuilder.ConnectionString));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+        builder.Services.Configure<CoverImageOptions>(
+            builder.Configuration.GetSection(CoverImageOptions.SectionName));
 
         builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
             {
@@ -45,6 +49,7 @@ public class Program
         builder.Services.AddScoped<IMovieService, MovieService>();
         builder.Services.AddScoped<IActorService, ActorService>();
         builder.Services.AddScoped<IDirectorService, DirectorService>();
+        builder.Services.AddScoped<ICoverImageStorageService, CoverImageStorageService>();
         builder.Services.AddScoped<IReviewService, ReviewService>();
         builder.Services.AddScoped<IStatisticsService, StatisticsService>();
 
@@ -68,8 +73,10 @@ public class Program
 
         app.UseRouting();
         app.UseAuthentication();
+        app.UseMiddleware<AdminFilmApiAuthMiddleware>();
         app.UseAuthorization();
 
+        app.MapControllers();
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");

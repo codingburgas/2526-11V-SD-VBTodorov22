@@ -13,4 +13,8 @@ public interface IMovieService : ICrudService<MovieListDto, MovieFormDto>
     Task<IReadOnlyCollection<int>> GetAvailableYearsAsync();
 
     Task<MovieDetailsDto?> GetDetailsAsync(int id);
+
+    Task<MovieCoverReferenceDto?> GetCoverReferenceAsync(int id);
+
+    Task<bool> UpdateCoverImageAsync(int id, string? coverImagePath);
 }

@@ -8,3 +8,5 @@ run.stdout.log
 run.stderr.log
 *.db-shm
 *.db-wal
+wwwroot/uploads/covers/*
+!wwwroot/uploads/covers/.gitkeep

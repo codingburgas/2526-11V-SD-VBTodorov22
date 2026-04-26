@@ -10,6 +10,9 @@
                 <h1 class="h3 mb-3">Create Catalog Item</h1>
                 <form asp-action="Create" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <div class="alert alert-info">
+                        Create the catalog item first, then upload the cover image from the edit screen.
+                    </div>
 
                     <div class="row g-3">
                         <div class="col-md-6">

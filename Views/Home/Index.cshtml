@@ -16,24 +16,6 @@
                 <a asp-controller="Statistics" asp-action="Index" class="btn btn-outline-primary">View Statistics</a>
             </div>
         </div>
-        <div class="col-lg-5">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <h2 class="h5">Seeded Accounts</h2>
-                    <p class="small text-muted mb-3">Use these accounts immediately after startup.</p>
-                    <div class="mb-3">
-                        <div class="fw-semibold">Admin</div>
-                        <div><code>admin@movieseriescatalog.local</code></div>
-                        <div><code>Admin123!</code></div>
-                    </div>
-                    <div>
-                        <div class="fw-semibold">User</div>
-                        <div><code>user@movieseriescatalog.local</code></div>
-                        <div><code>User123!</code></div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </section>
 
@@ -52,17 +34,36 @@
                         @foreach (var movie in Model.FeaturedTitles)
                         {
                             <div class="border rounded-3 p-3">
-                                <div class="d-flex justify-content-between gap-3 flex-wrap">
-                                    <div>
-                                        <h3 class="h5 mb-1">@movie.Title</h3>
-                                        <div class="text-muted small">@movie.CatalogType.GetDisplayName() | @movie.Genre.GetDisplayName() | @movie.ReleaseYear</div>
+                                <div class="row g-3 align-items-start">
+                                    <div class="col-sm-4 col-md-3">
+                                        <div class="catalog-cover catalog-cover-sm">
+                                            @if (!string.IsNullOrWhiteSpace(movie.CoverImageUrl))
+                                            {
+                                                <img src="@Url.Content(movie.CoverImageUrl)" alt="Cover image for @movie.Title" class="cover-image cover-image-card" />
+                                            }
+                                            else
+                                            {
+                                                <div class="catalog-cover-placeholder">
+                                                    <span class="catalog-cover-placeholder-title">@movie.Title</span>
+                                                    <span class="catalog-cover-placeholder-subtitle">No cover</span>
+                                                </div>
+                                            }
+                                        </div>
                                     </div>
-                                    <div class="text-end">
-                                        <div class="rating-number">@movie.AverageRating.ToString("0.0")</div>
-                                        <div class="small text-muted">@movie.ReviewCount review(s)</div>
+                                    <div class="col-sm-8 col-md-9">
+                                        <div class="d-flex justify-content-between gap-3 flex-wrap">
+                                            <div>
+                                                <h3 class="h5 mb-1">@movie.Title</h3>
+                                                <div class="text-muted small">@movie.CatalogType.GetDisplayName() | @movie.Genre.GetDisplayName() | @movie.ReleaseYear</div>
+                                            </div>
+                                            <div class="text-end">
+                                                <div class="rating-number">@movie.AverageRating.ToString("0.0")</div>
+                                                <div class="small text-muted">@movie.ReviewCount review(s)</div>
+                                            </div>
+                                        </div>
+                                        <p class="mb-0 mt-3 text-secondary">@movie.Description</p>
                                     </div>
                                 </div>
-                                <p class="mb-0 mt-3 text-secondary">@movie.Description</p>
                             </div>
                         }
                     </div>

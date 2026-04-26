@@ -5,6 +5,8 @@ namespace MovieSeriesCatalog.DTOs;
 
 public class MovieFormDto
 {
+    public int Id { get; set; }
+
     [Required]
     [StringLength(150)]
     public string Title { get; set; } = string.Empty;
@@ -32,4 +34,7 @@ public class MovieFormDto
     [MinLength(1, ErrorMessage = "Select at least one actor.")]
     [Display(Name = "Actors")]
     public List<int> ActorIds { get; set; } = new();
+
+    [Display(Name = "Current Cover")]
+    public string? CoverImageUrl { get; set; }
 }

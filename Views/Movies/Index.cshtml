@@ -68,27 +68,46 @@
         {
             <div class="col-lg-6">
                 <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex justify-content-between gap-3 flex-wrap mb-3">
-                            <div>
-                                <h2 class="h4 mb-1">@movie.Title</h2>
-                                <div class="small text-muted">@movie.CatalogType.GetDisplayName() | @movie.Genre.GetDisplayName() | @movie.ReleaseYear</div>
+                    <div class="card-body">
+                        <div class="row g-3 h-100">
+                            <div class="col-md-4">
+                                <div class="catalog-cover">
+                                    @if (!string.IsNullOrWhiteSpace(movie.CoverImageUrl))
+                                    {
+                                        <img src="@Url.Content(movie.CoverImageUrl)" alt="Cover image for @movie.Title" class="cover-image cover-image-card" />
+                                    }
+                                    else
+                                    {
+                                        <div class="catalog-cover-placeholder">
+                                            <span class="catalog-cover-placeholder-title">@movie.Title</span>
+                                            <span class="catalog-cover-placeholder-subtitle">No cover</span>
+                                        </div>
+                                    }
+                                </div>
                             </div>
-                            <div class="text-end">
-                                <div class="rating-number">@movie.AverageRating.ToString("0.0")</div>
-                                <div class="small text-muted">@movie.ReviewCount review(s)</div>
+                            <div class="col-md-8 d-flex flex-column">
+                                <div class="d-flex justify-content-between gap-3 flex-wrap mb-3">
+                                    <div>
+                                        <h2 class="h4 mb-1">@movie.Title</h2>
+                                        <div class="small text-muted">@movie.CatalogType.GetDisplayName() | @movie.Genre.GetDisplayName() | @movie.ReleaseYear</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="rating-number">@movie.AverageRating.ToString("0.0")</div>
+                                        <div class="small text-muted">@movie.ReviewCount review(s)</div>
+                                    </div>
+                                </div>
+                                <p class="text-secondary description-snippet">@movie.Description</p>
+                                <div class="small text-muted mb-3">Directed by @movie.DirectorName</div>
+                                <div class="mt-auto d-flex flex-wrap gap-2">
+                                    <a asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-primary btn-sm">Details</a>
+                                    <a asp-controller="Reviews" asp-action="Index" asp-route-movieId="@movie.Id" class="btn btn-outline-secondary btn-sm">Reviews</a>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-outline-dark btn-sm">Edit</a>
+                                        <a asp-action="Delete" asp-route-id="@movie.Id" class="btn btn-outline-danger btn-sm">Delete</a>
+                                    }
+                                </div>
                             </div>
-                        </div>
-                        <p class="text-secondary description-snippet">@movie.Description</p>
-                        <div class="small text-muted mb-3">Directed by @movie.DirectorName</div>
-                        <div class="mt-auto d-flex flex-wrap gap-2">
-                            <a asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-primary btn-sm">Details</a>
-                            <a asp-controller="Reviews" asp-action="Index" asp-route-movieId="@movie.Id" class="btn btn-outline-secondary btn-sm">Reviews</a>
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <a asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-outline-dark btn-sm">Edit</a>
-                                <a asp-action="Delete" asp-route-id="@movie.Id" class="btn btn-outline-danger btn-sm">Delete</a>
-                            }
                         </div>
                     </div>
                 </div>

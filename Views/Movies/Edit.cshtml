@@ -8,7 +8,7 @@
         <div class="card border-0 shadow-sm">
             <div class="card-body p-4">
                 <h1 class="h3 mb-3">Edit Catalog Item</h1>
-                <form asp-action="Edit" method="post">
+                <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                     <div class="row g-3">
@@ -59,9 +59,128 @@
                 </form>
             </div>
         </div>
+
+        <div class="card border-0 shadow-sm mt-4" id="cover-management">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                    <div>
+                        <h2 class="h4 mb-1">Cover Image</h2>
+                        <p class="text-muted mb-0">Upload a JPG or PNG poster up to 5 MB. Uploading a new file replaces the existing cover.</p>
+                    </div>
+                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Preview Film Page</a>
+                </div>
+
+                <div class="row g-4 align-items-start">
+                    <div class="col-md-5">
+                        <div id="coverPreview" class="catalog-cover catalog-cover-lg">
+                            @if (!string.IsNullOrWhiteSpace(Model.CoverImageUrl))
+                            {
+                                <img src="@Url.Content(Model.CoverImageUrl)" alt="Cover image for @Model.Title" class="cover-image cover-image-detail" />
+                            }
+                            else
+                            {
+                                <div class="catalog-cover-placeholder">
+                                    <span class="catalog-cover-placeholder-title">@Model.Title</span>
+                                    <span class="catalog-cover-placeholder-subtitle">No cover uploaded yet</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <form id="coverUploadForm"
+                              data-upload-url="@($"/admin/films/{Model.Id}/cover")"
+                              data-film-title="@Model.Title"
+                              class="d-grid gap-3"
+                              method="post"
+                              action="@($"/admin/films/{Model.Id}/cover")"
+                              enctype="multipart/form-data">
+                            <div>
+                                <label class="form-label" for="coverFile">Upload Cover</label>
+                                <input id="coverFile" name="file" type="file" class="form-control" accept=".jpg,.jpeg,.png,image/png,image/jpeg" />
+                                <div class="form-text">Accepted formats: JPG and PNG.</div>
+                            </div>
+                            <div id="coverUploadMessage" class="text-muted small">The current catalog item is ready for a cover upload.</div>
+                            <div class="d-flex gap-2">
+                                <button id="coverUploadButton" type="submit" class="btn btn-primary">Upload Cover</button>
+                                <button id="coverUploadReset" type="reset" class="btn btn-outline-secondary">Clear Selection</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        (() => {
+            const form = document.getElementById('coverUploadForm');
+            if (!form) {
+                return;
+            }
+
+            const fileInput = document.getElementById('coverFile');
+            const submitButton = document.getElementById('coverUploadButton');
+            const message = document.getElementById('coverUploadMessage');
+            const preview = document.getElementById('coverPreview');
+            const filmTitle = form.dataset.filmTitle ?? 'film';
+            const uploadUrl = form.dataset.uploadUrl;
+
+            const setMessage = (style, text) => {
+                message.className = `alert alert-${style} py-2 mb-0`;
+                message.textContent = text;
+            };
+
+            const setBusy = (isBusy) => {
+                submitButton.disabled = isBusy;
+                submitButton.textContent = isBusy ? 'Uploading...' : 'Upload Cover';
+            };
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    setMessage('warning', 'Select a JPG or PNG file before uploading.');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+
+                setBusy(true);
+                setMessage('secondary', 'Uploading cover image...');
+
+                try {
+                    const response = await fetch(uploadUrl, {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'same-origin'
+                    });
+
+                    const payload = await response.json().catch(() => ({}));
+                    if (!response.ok) {
+                        setMessage('danger', payload.message ?? payload.detail ?? 'Cover upload failed.');
+                        return;
+                    }
+
+                    const cacheBuster = Date.now();
+                    preview.innerHTML = `
+                        <img
+                            src="${payload.coverImageUrl}?v=${cacheBuster}"
+                            alt="Cover image for ${filmTitle}"
+                            class="cover-image cover-image-detail" />
+                    `;
+
+                    setMessage('success', payload.message ?? 'Cover image uploaded successfully.');
+                    form.reset();
+                } catch {
+                    setMessage('danger', 'Cover upload failed because the server could not be reached.');
+                } finally {
+                    setBusy(false);
+                }
+            });
+        })();
+    </script>
 }
