@@ -1,124 +1,124 @@
-# Film Streaming Platform
+# 🎬 Movie Series Catalog
 
-Film Streaming Platform is a catalog and administration solution for managing films, people, reviews, and cover artwork. This repository contains a working ASP.NET Core MVC application for browsing and administration, plus a reference C++ REST backend design for teams that want to implement the service layer with Crow or Pistache.
+> An ASP.NET Core MVC web application for browsing a catalog of movies and series, managing actors and directors, and collecting user reviews.
 
-## Project Overview
+![GitHub repo](https://img.shields.io/badge/CodingBurgas-2526--11V--SD--VBTodorov22-blue)
+![.NET](https://img.shields.io/badge/.NET-8.0-purple)
+![C#](https://img.shields.io/badge/C%23-67%25-green)
+![HTML](https://img.shields.io/badge/HTML-32%25-orange)
 
-The platform is designed around three responsibilities:
+---
 
-- Public catalog browsing for films, metadata, ratings, and reviews
-- Role-based administration for catalog maintenance and cover image management
-- A REST-oriented backend contract that can be implemented in C++ and backed by MySQL with filesystem-based media storage
+## 📖 About
 
-The latest update adds admin-only cover upload support. Administrators can now upload or replace a film poster, store it on the local filesystem, and expose the stored URL through the film API and the UI.
+**Movie Series Catalog** is a school project built for CodingBurgas GitHub Classroom. It allows users to browse catalog entries for movies and series, view actor and director information, and leave reviews — with authentication controlling who can interact with the content.
 
-## Features
+---
 
-- Browse films and series by type, genre, and release year
-- View detailed film pages with cast, crew, ratings, reviews, and cover artwork
-- Manage actors, directors, films, reviews, and statistics from the MVC application
-- Upload and replace film cover images from the admin edit screen
-- Admin-only cover upload API with type and size validation
-- Local filesystem storage for uploaded covers in `wwwroot/uploads/covers/`
-- Seeded identity roles for admin and standard users
-- MySQL schema reference for a C++ backend deployment
-- GitHub wiki pages ready to publish from the `wiki/` directory
+## ✨ Features
 
-## Tech Stack
+- 📋 Browse a catalog of movies and series
+- 🎭 View and manage actors and directors
+- ⭐ Authenticated users can submit one review per catalog item
+- 🔒 Once a review is submitted, the add-review action is hidden for that user
+- 👤 User registration, login, and identity management via ASP.NET Identity
 
-- Backend reference architecture: C++ REST API using Crow or Pistache style routing
-- Current repository application: ASP.NET Core MVC (.NET 8, C#, Razor Views)
-- Authentication and authorization: ASP.NET Core Identity with role-based admin access
-- Data access: Entity Framework Core with SQLite in the local MVC app
-- Database reference for service deployments: MySQL 8
-- Storage: local filesystem for cover images
-- Frontend: Razor Views, Bootstrap 5, vanilla JavaScript for async cover upload
+---
 
-## Installation
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | ASP.NET Core 8.0 MVC |
+| Language | C# |
+| ORM | Entity Framework Core 8 |
+| Database | SQLite |
+| Auth | ASP.NET Core Identity |
+| Frontend | Razor Views + HTML/CSS |
+
+---
+
+## 📁 Project Structure
+
+```
+MovieSeriesCatalog/
+├── Areas/
+│   └── Identity/
+│       └── Pages/          # Identity UI pages (login, register, etc.)
+├── Controllers/            # MVC Controllers
+├── DTOs/                   # Data Transfer Objects
+├── Data/                   # DbContext and migrations
+├── Models/                 # Domain models
+├── Services/               # Business logic / service layer
+├── Views/                  # Razor view templates
+├── wwwroot/                # Static files (CSS, JS, images)
+├── Program.cs              # App entry point & DI configuration
+├── appsettings.json        # Application configuration
+└── MovieSeriesCatalog.csproj
+```
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- .NET 8 SDK
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - Git
-- Optional: MySQL 8 if you want to apply the reference SQL schema
-- Optional: a C++17 or newer toolchain if you want to adapt the reference backend in `docs/cpp-backend/`
 
-### Run the MVC application
+### Installation
 
-```bash
-git clone <repository-url>
-cd project-VBTodorov22
-dotnet restore
-dotnet run
-```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/codingburgas/2526-11V-SD-VBTodorov22.git
+   cd 2526-11V-SD-VBTodorov22
+   ```
 
-The application seeds demo accounts on first start:
+2. **Restore dependencies**
+   ```bash
+   dotnet restore
+   ```
 
-- Admin: `admin@movieseriescatalog.local` / `Admin123!`
-- User: `user@movieseriescatalog.local` / `User123!`
+3. **Apply database migrations**
+   ```bash
+   dotnet ef database update
+   ```
 
-### Reference backend assets
+4. **Run the application**
+   ```bash
+   dotnet run
+   ```
 
-- MySQL schema: [docs/sql/film_streaming_platform_mysql.sql](docs/sql/film_streaming_platform_mysql.sql)
-- C++ backend reference: [docs/cpp-backend/README.md](docs/cpp-backend/README.md)
-- GitHub wiki pages: [wiki/Home.md](wiki/Home.md)
+5. Open your browser and navigate to `https://localhost:5001`
 
-## Usage
+---
 
-### Catalog Browsing
+## 👤 Usage
 
-1. Start the application with `dotnet run`.
-2. Open the site in a browser.
-3. Browse the catalog from `Movies`, apply filters, and open film details.
+- **Guest users** can browse the catalog, movies, series, actors, and directors.
+- **Registered users** can log in and submit a review for any catalog item they haven't reviewed yet.
+- **After submitting a review**, the review form is hidden — one review per user per item.
 
-### Admin Cover Upload
+---
 
-1. Sign in with the seeded admin account.
-2. Open `Movies`, then create a new catalog item or edit an existing one.
-3. In the `Cover Image` section of the edit page, select a `.jpg`, `.jpeg`, or `.png` file.
-4. Click `Upload Cover`.
-5. The file is stored under `wwwroot/uploads/covers/`, the film record is updated, and the new image appears on the film pages.
+## 📦 NuGet Packages
 
-### REST API
+| Package | Version |
+|---|---|
+| Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore | 8.0.26 |
+| Microsoft.AspNetCore.Identity.EntityFrameworkCore | 8.0.26 |
+| Microsoft.AspNetCore.Identity.UI | 8.0.26 |
+| Microsoft.EntityFrameworkCore.Sqlite | 8.0.26 |
+| Microsoft.EntityFrameworkCore.Tools | 8.0.26 |
 
-- `GET /films/{id}` returns film data including `coverUrl`
-- `POST /admin/films/{id}/cover` accepts multipart form data with a `file` field and updates the cover image for that film
+---
 
-## Project Structure
+## 🎓 Author
 
-```text
-.
-|-- Controllers/             # MVC controllers and REST endpoints
-|-- Data/                    # EF Core context, migrations, seeding, roles
-|-- DTOs/                    # View models and API contracts
-|-- Middleware/              # API authorization middleware
-|-- Models/                  # Domain models
-|-- Options/                 # Cover upload configuration
-|-- Services/                # Business logic, repositories, storage services
-|-- Views/                   # Razor UI
-|-- wwwroot/                 # Static assets and uploaded cover images
-|-- docs/
-|   |-- cpp-backend/         # Reference C++ REST implementation
-|   |-- examples/            # Example client-side upload logic
-|   `-- sql/                 # MySQL schema
-`-- wiki/                    # GitHub wiki markdown pages
-```
+**VBTodorov** — CodingBurgas, Class 11V, 2025–2026
 
-## Contributing
+---
 
-1. Create a feature branch from `main`.
-2. Keep changes scoped and documented.
-3. Run the application and verify the affected workflows.
-4. Update the wiki or README when you change setup, API behavior, or schema.
-5. Open a pull request with a short summary, verification notes, and screenshots for UI changes when relevant.
+## 📄 License
 
-## Wiki
-
-The repository includes wiki-ready pages:
-
-- [Home](wiki/Home.md)
-- [Installation](wiki/Installation.md)
-- [API](wiki/API.md)
-- [Database](wiki/Database.md)
-- [Admin Guide](wiki/Admin-Guide.md)
-- [User Guide](wiki/User-Guide.md)
+This project was created as part of a GitHub Classroom assignment for [CodingBurgas](https://github.com/codingburgas).
